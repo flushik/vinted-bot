@@ -2,6 +2,9 @@ import requests
 from bs4 import BeautifulSoup
 import time
 
+from flask import Flask
+import threading
+
 URL = "https://www.vinted.pl/catalog?search_text=playstation&order=newest_first"
 WEBHOOK = "https://discord.com/api/webhooks/1490457408269455510/4toMRV9vw4AFXguvMJIPXzcrTLOMCPTlChg57npjBCqSHB_QMvBzDnIZUIAxyOzUXfMi"
 
