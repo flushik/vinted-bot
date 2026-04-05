@@ -40,7 +40,6 @@ def get_details(link):
     return title, price, img
 
 def check():
-    send("TEST BOT DZIAŁA", "123 zł", "https://test.pl", None)
     headers = {"User-Agent": "Mozilla/5.0"}
     r = requests.get(URL, headers=headers)
     soup = BeautifulSoup(r.text, "html.parser")
