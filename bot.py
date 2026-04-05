@@ -59,7 +59,7 @@ def check():
             title_lower = title.lower()
 
             # musi być PS4 lub PS5
-            #if not any(x in title_lower for x in ["ps4", "playstation 4", "ps5", "playstation 5"]):
+            if not any(x in title_lower for x in ["ps4", "playstation 4", "ps5", "playstation 5"]):
                 continue
 
             # musi wyglądać na konsolę
