@@ -68,16 +68,16 @@ def check():
                 "konto", "psn", "klucz", "kod", "digital",
                 "dlc", "season pass"
             ]
-            if any(word in title_lower for word in bad_words):
-                continue
+           # if any(word in title_lower for word in bad_words):
+               # continue
 
             # blokujemy słabe oferty
             weak_words = [
                 "uszkodzony", "nie działa", "na części",
                 "brak", "bez kabla", "sam pad"
             ]
-            if any(word in title_lower for word in weak_words):
-                continue
+            #if any(word in title_lower for word in weak_words):
+                #continue
 
             send(title, price, full_link, img)
 
