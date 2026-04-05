@@ -59,8 +59,8 @@ def check():
             title_lower = title.lower()
 
             # musi być PS4 lub PS5
-            #if not any(x in title_lower for x in ["ps4", "playstation 4", "ps5", "playstation 5"]):
-               #continue
+            if not any(x in title_lower for x in ["ps4", "playstation 4", "ps5", "playstation 5"]):
+               continue
 
             # blokujemy śmieci
             bad_words = [
@@ -68,16 +68,16 @@ def check():
                 "konto", "psn", "klucz", "kod", "digital",
                 "dlc", "season pass"
             ]
-           # if any(word in title_lower for word in bad_words):
-               # continue
+            if any(word in title_lower for word in bad_words):
+                continue
 
             # blokujemy słabe oferty
             weak_words = [
                 "uszkodzony", "nie działa", "na części",
                 "brak", "bez kabla", "sam pad"
             ]
-            #if any(word in title_lower for word in weak_words):
-                #continue
+            if any(word in title_lower for word in weak_words):
+                continue
 
             send(title, price, full_link, img)
 
