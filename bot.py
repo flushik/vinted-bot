@@ -81,6 +81,17 @@ def check():
 
             send(title, price, full_link, img)
 
-while True:
-    check()
-    time.sleep(180)
+app = Flask(__name__)
+
+@app.route("/")
+def home():
+    return "bot działa"
+
+def run_bot():
+    while True:
+        check()
+        time.sleep(180)
+
+threading.Thread(target=run_bot).start()
+
+app.run(host="0.0.0.0", port=10000)
