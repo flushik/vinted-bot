@@ -1,102 +1,45 @@
 import requests
 import time
+import xml.etree.ElementTree as ET
 
-WEBHOOK_URL = "https://discord.com/api/webhooks/1490646676262883350/erTfPJAGQ6Gbo1h6xkQ3bzAWFs9Viet-ZfjMhtTf-Illyjh5Q9r0aQEAzRC_mijXH-aH"
-SEARCH_URL = "https://www.vinted.pl/catalog?search_text=ps4&catalog[]=3025&search_id=32503366015&order=newest_first"
+WEBHOOK_URL = "TU_WKLEJ_WEBHOOK"
 
-seen_ids = set()
+RSS_URL = "https://www.vinted.pl/catalog?search_text=ps5&order=newest_first&rss=true"
 
-def is_valid(item):
-    title = item["title"].lower()
+seen = set()
 
-    # musi zawierać PS4/PS5
-    if not any(x in title for x in ["ps4", "ps5", "playstation 4", "playstation 5"]):
-        return False
-
-    # odrzucamy pojedyncze rzeczy
-    blocked = ["pad", "kontroler", "controller", "kabel", "ładowarka", "zasilacz", "sluchawki", "słuchawki"]
-
-    if any(x in title for x in blocked):
-        return False
-
-    # ALE jeśli jest konsola + coś (np pad) to OK
-    if any(x in title for x in ["ps4", "ps5"]):
-        return True
-
-    return True
-
-
-def get_items():
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
-        "Accept": "application/json, text/plain, */*",
-        "Accept-Language": "pl-PL,pl;q=0.9",
-        "Referer": "https://www.vinted.pl/",
-        "Origin": "https://www.vinted.pl",
-        "Connection": "keep-alive"
-    }
-
-    try:
-        r = requests.get(SEARCH_URL, headers=headers)
-
-        print("Status:", r.status_code)
-
-        if r.status_code != 200:
-            print(r.text[:200])
-            return []
-
-        # 🔥 ważne – sprawdzamy czy to JSON
-        if "application/json" not in r.headers.get("Content-Type", ""):
-            print("To nie JSON:", r.text[:200])
-            return []
-
-        data = r.json()
-        return data.get("items", [])
-
-    except Exception as e:
-        print("Błąd:", e)
-        return []
-
-
-def send(item):
-    image_url = None
-    if "photo" in item and item["photo"]:
-        image_url = item["photo"]["url"]
-
-    embed = {
-        "title": item["title"],
-        "url": item["url"],
-        "description": f"💰 {item['price']} zł",
-        "color": 5814783
-    }
-
-    if image_url:
-        embed["image"] = {"url": image_url}
-
+def send(title, link):
     data = {
-        "embeds": [embed]
+        "content": f"{title}\n{link}"
     }
-
-    try:
-        requests.post(WEBHOOK_URL, json=data)
-        print("Wysłano:", item["title"])
-    except Exception as e:
-        print("Błąd wysyłania:", e)
+    requests.post(WEBHOOK_URL, json=data)
+    print("Wysłano:", title)
 
 
-print("Bot działa...")
+def check():
+    r = requests.get(RSS_URL)
+    root = ET.fromstring(r.content)
+
+    for item in root.findall(".//item"):
+        title = item.find("title").text
+        link = item.find("link").text
+
+        if link not in seen:
+            seen.add(link)
+
+            # filtr
+            t = title.lower()
+            if "ps4" in t or "ps5" in t:
+                if not any(x in t for x in ["pad", "kontroler", "kabel"]):
+                    send(title, link)
+
+
+print("Bot działa (RSS)...")
 
 while True:
     try:
-        items = get_items()
-
-        for item in items:
-            if item["id"] not in seen_ids and is_valid(item):
-                seen_ids.add(item["id"])
-                send(item)
-
+        check()
         time.sleep(60)
-
     except Exception as e:
-        print("Błąd główny:", e)
+        print("Błąd:", e)
         time.sleep(60)
