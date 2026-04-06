@@ -16,24 +16,30 @@ def send(title, link, price):
 
 def check():
     headers = {
-        "User-Agent": "Mozilla/5.0"
+        "User-Agent": "Mozilla/5.0",
+        "Accept": "application/json",
+        "X-Requested-With": "XMLHttpRequest"
     }
 
-    r = requests.get(URL, headers=headers)
+    url = "https://www.vinted.pl/api/v2/catalog/items?search_text=ps5&order=newest_first"
+
+    r = requests.get(url, headers=headers)
+
+    print("Status:", r.status_code)
 
     if r.status_code != 200:
-        print("Błąd:", r.status_code)
+        print(r.text[:200])
         return
 
-    soup = BeautifulSoup(r.text, "html.parser")
+    data = r.json()
+    items = data.get("items", [])
 
-    items = soup.find_all("a", {"data-testid": "item-link"})
     print("Znaleziono:", len(items))
 
     for item in items:
-        link = "https://www.vinted.pl" + item.get("href")
-
-        title = item.get_text(strip=True)
+        link = item["url"]
+        title = item["title"]
+        price = item["price"]
 
         if link in seen:
             continue
@@ -47,8 +53,7 @@ def check():
                 continue
 
             print("Wysłano:", title)
-            send(title, link, "sprawdź ofertę")
-
+            send(title, link, price)
 def main():
     print("Bot działa (SCRAPER)...")
 
