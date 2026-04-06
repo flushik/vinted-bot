@@ -28,6 +28,7 @@ def check():
     soup = BeautifulSoup(r.text, "html.parser")
 
     items = soup.find_all("a", {"data-testid": "item-link"})
+    print("Znaleziono:", len(items))
 
     for item in items:
         link = "https://www.vinted.pl" + item.get("href")
