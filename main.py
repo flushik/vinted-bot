@@ -4,7 +4,7 @@ import xml.etree.ElementTree as ET
 
 WEBHOOK_URL = "https://discord.com/api/webhooks/1490646676262883350/erTfPJAGQ6Gbo1h6xkQ3bzAWFs9Viet-ZfjMhtTf-Illyjh5Q9r0aQEAzRC_mijXH-aH"
 
-RSS_URL = "https://www.vinted.pl/catalog?search_text=ps5&order=newest_first&per_page=20&rss=true""
+RSS_URL = "https://www.vinted.pl/catalog?search_text=ps5&order=newest_first&per_page=20&rss=true"
 
 seen = set()
 
