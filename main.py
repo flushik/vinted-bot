@@ -2,7 +2,7 @@ import requests
 import time
 
 WEBHOOK_URL = "https://discord.com/api/webhooks/1490646676262883350/erTfPJAGQ6Gbo1h6xkQ3bzAWFs9Viet-ZfjMhtTf-Illyjh5Q9r0aQEAzRC_mijXH-aH"
-SEARCH_URL = "https://www.vinted.pl/api/v2/catalog/items?search_text=playstation"
+SEARCH_URL = "https://www.vinted.pl/catalog?search_text=ps4&catalog[]=3025&search_id=32503366015&order=newest_first"
 
 seen_ids = set()
 
