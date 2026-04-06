@@ -28,14 +28,24 @@ def is_valid(item):
 
 def get_items():
     headers = {
-        "User-Agent": "Mozilla/5.0"
+        "User-Agent": "Mozilla/5.0",
+        "Accept": "application/json",
+        "X-Requested-With": "XMLHttpRequest"
     }
 
     try:
         r = requests.get(SEARCH_URL, headers=headers)
-        return r.json().get("items", [])
+
+        if r.status_code != 200:
+            print("Status code:", r.status_code)
+            print(r.text[:200])
+            return []
+
+        data = r.json()
+        return data.get("items", [])
+
     except Exception as e:
-        print("Błąd pobierania:", e)
+        print("Błąd JSON:", e)
         return []
 
 
