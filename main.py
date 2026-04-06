@@ -28,24 +28,33 @@ def is_valid(item):
 
 def get_items():
     headers = {
-        "User-Agent": "Mozilla/5.0",
-        "Accept": "application/json",
-        "X-Requested-With": "XMLHttpRequest"
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+        "Accept": "application/json, text/plain, */*",
+        "Accept-Language": "pl-PL,pl;q=0.9",
+        "Referer": "https://www.vinted.pl/",
+        "Origin": "https://www.vinted.pl",
+        "Connection": "keep-alive"
     }
 
     try:
         r = requests.get(SEARCH_URL, headers=headers)
 
+        print("Status:", r.status_code)
+
         if r.status_code != 200:
-            print("Status code:", r.status_code)
             print(r.text[:200])
+            return []
+
+        # 🔥 ważne – sprawdzamy czy to JSON
+        if "application/json" not in r.headers.get("Content-Type", ""):
+            print("To nie JSON:", r.text[:200])
             return []
 
         data = r.json()
         return data.get("items", [])
 
     except Exception as e:
-        print("Błąd JSON:", e)
+        print("Błąd:", e)
         return []
 
 
